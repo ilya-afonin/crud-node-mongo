@@ -6,55 +6,44 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import store from "../store";
-import { CLOSE_EDIT_FORM } from "../redux/constants/actionTypes";
-import { UPDATE_ITEM } from "../redux/constants/actionTypes";
-import { connect } from "net";
-window.store = store;
+import { putItem, closeEditForm } from "../redux/actions";
+import { connect } from "react-redux";
 
 class EditDialog extends React.Component {
   state = {
-    open: false,
-    article: {
-      title: "",
-      id: 0,
-      date: ""
-    }
+    newValue: ""
   };
 
   handleClose = () => {
-    store.dispatch({
-      type: CLOSE_EDIT_FORM
-    });
+    this.props.closeEditForm();
   };
 
   handleChange = name => event => {
     console.log("New Value " + event.target.value);
     this.setState({
-      newTitle: event.target.value
+      newValue: event.target.value
     });
   };
 
   handleSave = () => {
-    store.dispatch({
-      type: UPDATE_ITEM,
-      payload: {
-        title: this.state.newTitle,
-        id: this.state.item.id,
-        
-      }
-    });
 
-    store.dispatch({
-      type: CLOSE_EDIT_FORM
-    });
+    const item = {
+      //_id: this.props.item._id,
+      key: this.props.selectItem.key,
+      value: this.state.newValue
+    }
+    this.props.putItem(item);
+    this.props.closeEditForm();
   };
 
   componentDidMount() {
     // this.setState({
-    //   open: store.getState()["uiState"]["openEditDialog"],
-    //   article: store.getState()["uiState"]["articleToEdit"]
+    //   open: this.props.isOpen,
+    //   item: this.props.selectItem
     // });
+    this.setState({
+      newValue: this.props.selectItem.value
+    });
 
     // store.subscribe(() => {
     //   console.log(
@@ -69,8 +58,8 @@ class EditDialog extends React.Component {
 
   render() {
 
-    const { isOpen } = this.props;
-
+    const { isOpen, selectItem } = this.props;
+    
     return (
       <div>
         <Dialog
@@ -78,16 +67,25 @@ class EditDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Update Article</DialogTitle>
+          <DialogTitle id="form-dialog-title">Update Item</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please Update article.</DialogContentText>
+            <DialogContentText>Please Update item.</DialogContentText>
+            <TextField
+              disabled
+              margin="dense"
+              id="name"
+              label="Key"
+              defaultValue={selectItem.key}
+              rows="1"
+              fullWidth
+            />
             <TextField
               autoFocus
               margin="dense"
               id="name"
-              label="Article"
+              label="Value"
               multiline
-              defaultValue={this.state.article.title}
+              defaultValue={selectItem.value}
               rowsMax="4"
               rows="4"
               fullWidth
@@ -113,8 +111,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  closeEditForm: () => dispatch({type: CLOSE_EDIT_FORM})
-  
+  closeEditForm: () => dispatch(closeEditForm()),
+  putItem: (item) => dispatch(putItem(item))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditDialog)

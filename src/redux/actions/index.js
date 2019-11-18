@@ -5,6 +5,7 @@ import {
     SELECT_ITEM,
     DELETE_ITEM,
     OPEN_EDIT_FORM,
+    CLOSE_EDIT_FORM,
     OPEN_FORM,
     RECEIVE_DATA,
     CLOSE_FORM,
@@ -20,14 +21,13 @@ export const deleteItem = () => ({
     type: DELETE_ITEM
 })
 
-export const updateItem = item => ({
-    type: UPDATE_ITEM,
-    payload: item
-})
-
 export const openEditForm = item => ({
     type: OPEN_EDIT_FORM,
     payload: item
+})
+
+export const closeEditForm = () => ({
+    type: CLOSE_EDIT_FORM
 })
 
 export const openForm = () => ({
@@ -85,4 +85,36 @@ export const postItem = (item) => (dispatch) => {
         .then(dispatch(closeForm()))
         .catch(ex => console.log('Fetch failed', ex))
 
+}
+
+export const updateItem = item =>
+({
+    type: UPDATE_ITEM,
+    payload: item
+})
+
+export const putItem = (item) => (dispatch) => {
+    
+    fetch('http://localhost:8080/storage', {
+        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, cors, *same-origin
+        //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(item), // тип данных в body должен соответвовать значению заголовка "Content-Type" 
+    })
+        .then(response => {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        })
+        .then(dispatch(updateItem(item)))
+        .then(dispatch(closeEditForm()))
+        .catch(ex => console.log('Fetch failed', ex))
 }

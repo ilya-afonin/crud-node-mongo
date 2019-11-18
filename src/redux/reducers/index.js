@@ -41,14 +41,14 @@ export default function rootReducer(state = InitialState, action) {
         //----------------UPDATE-------------------
         case types.UPDATE_ITEM:
             console.log("Save updated item" + JSON.stringify(action));
-
+            console.log(action);
             return {
                 ...state,
                 items: state.items.map(item => {
-                    if (item._id !== action.payload._id) {
+                    if (item.key !== action.payload.key) {
                         return item;
                     } else {
-                        return { ...item, title: action.payload.title };
+                        return { ...item, value: action.payload.value };
                     }
                 })
             };

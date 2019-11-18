@@ -46,10 +46,6 @@ const styles = theme => ({
 
 class ListComponent extends React.Component {
 
-  openEditDialog = item => {
-    console.log("Edit");
-    this.props.openEditForm(item);
-  };
   
   handleToggle = id => {
     console.log("Select----------" + id);
@@ -152,7 +148,7 @@ class ListComponent extends React.Component {
                       <ListItemSecondaryAction>
                         <IconButton
                           aria-label="Comments"
-                          onClick={(item) => this.openEditDialog(item)}
+                          onClick={ () => this.props.openEditForm(item) }
                         >
                           <CommentIcon />
                         </IconButton>
@@ -178,8 +174,6 @@ ListComponent.propTypes = {
 };
 
 const mapStateToProps = state => (
-  
-  console.log(state),
   {
   isFetching: state.isFetching,
   checked: state.uiState.checked,
@@ -188,7 +182,7 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => ({
   selectItem: (item) => dispatch(selectItem(item)), 
-  openEditForm: () => dispatch(openEditForm())
+  openEditForm: (item) => dispatch(openEditForm(item))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ListComponent));
