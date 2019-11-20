@@ -45,22 +45,6 @@ class FormDialog extends Component {
 
   };
 
-  componentDidMount() {
-    // this.setState({
-    //   open: store.getState()["uiState"]["openFormDialog"]
-    // });
-
-    // store.subscribe(() => {
-    //   console.log(
-    //     "Form Dialog State" + JSON.stringify(store.getState()["uiState"])
-    //   );
-
-    //   this.setState({
-    //     open: store.getState()["uiState"]["openFormDialog"]
-    //   });
-    // });
-  }
-
   render() {
     return (
       <div>
@@ -85,9 +69,7 @@ class FormDialog extends Component {
               value={this.state.key}
               placeholder="Введите ключ"
             />
-            &nbsp;
              <TextField
-              autoFocus
               margin="dense"
               id="value"
               label="value"

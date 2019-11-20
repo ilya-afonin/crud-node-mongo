@@ -14,7 +14,7 @@ const styles = {};
 class SimpleAppBar extends React.Component {
   
   handleDelete = () => {
-    this.props.deleteItem()
+      this.props.deleteItem()
   };
 
   render() {
@@ -46,7 +46,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    deleteItem: dispatch(deleteItem)
+    deleteItem: () => dispatch(deleteItem)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SimpleAppBar));

@@ -37,23 +37,9 @@ class EditDialog extends React.Component {
   };
 
   componentDidMount() {
-    // this.setState({
-    //   open: this.props.isOpen,
-    //   item: this.props.selectItem
-    // });
     this.setState({
       newValue: this.props.selectItem.value
     });
-
-    // store.subscribe(() => {
-    //   console.log(
-    //     "Edit Form Dialog State" + JSON.stringify(store.getState()["uiState"])
-    //   );
-    //   this.setState({
-    //     open: store.getState()["uiState"]["openEditDialog"],
-    //     article: store.getState()["uiState"]["articleToEdit"]
-    //   });
-    // });
   }
 
   render() {
@@ -71,9 +57,8 @@ class EditDialog extends React.Component {
           <DialogContent>
             <DialogContentText>Please Update item.</DialogContentText>
             <TextField
-              disabled
               margin="dense"
-              id="name"
+              id="key"
               label="Key"
               defaultValue={selectItem.key}
               rows="1"
@@ -82,7 +67,7 @@ class EditDialog extends React.Component {
             <TextField
               autoFocus
               margin="dense"
-              id="name"
+              id="value"
               label="Value"
               multiline
               defaultValue={selectItem.value}

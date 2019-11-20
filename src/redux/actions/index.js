@@ -17,10 +17,6 @@ export const selectItem = id => ({
     payload: id
 })
 
-export const deleteItem = () => ({
-    type: DELETE_ITEM
-})
-
 export const openEditForm = item => ({
     type: OPEN_EDIT_FORM,
     payload: item
@@ -38,7 +34,7 @@ export const closeForm = () => ({
     type: CLOSE_FORM
 });
 
-export const receiveData = items => ({
+const receiveData = items => ({
     type: RECEIVE_DATA,
     payload: items
 })
@@ -55,13 +51,13 @@ export const fetchData = () => async (dispatch) => {
         .catch(ex => console.log('Fetch failed', ex))
 }
 
-export const addItem = item => ({
+const addItem = item => ({
     type: ADD_ITEM,
     payload: item
 });
 
 export const postItem = (item) => (dispatch) => {
-    
+
     fetch('http://localhost:8080/storage', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
@@ -87,26 +83,23 @@ export const postItem = (item) => (dispatch) => {
 
 }
 
-export const updateItem = item =>
-({
-    type: UPDATE_ITEM,
-    payload: item
-})
+const updateItem = item =>
+    ({
+        type: UPDATE_ITEM,
+        payload: item
+    })
 
 export const putItem = (item) => (dispatch) => {
-    
+
     fetch('http://localhost:8080/storage', {
-        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, cors, *same-origin
-        //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
+        method: 'PUT',
+        mode: 'cors',
+        cache: 'no-cache',
         headers: {
-            'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json'
         },
-        redirect: 'follow', // manual, *follow, error
-        referrer: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify(item), // тип данных в body должен соответвовать значению заголовка "Content-Type" 
+        referrer: 'no-referrer',
+        body: JSON.stringify(item), 
     })
         .then(response => {
             if (response.status >= 400) {
@@ -116,5 +109,31 @@ export const putItem = (item) => (dispatch) => {
         })
         .then(dispatch(updateItem(item)))
         .then(dispatch(closeEditForm()))
+        .catch(ex => console.log('Fetch failed', ex))
+}
+
+const deleteItemStore = (item) => ({
+    type: DELETE_ITEM,
+    payload: item
+})
+
+export const deleteItem = (item) => (dispatch) => {
+
+    fetch(`http://localhost:8080/storage/${item.key}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        referrer: 'no-referrer'
+    })
+        .then(response => {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        })
+        .then(dispatch(deleteItemStore(item)))
         .catch(ex => console.log('Fetch failed', ex))
 }

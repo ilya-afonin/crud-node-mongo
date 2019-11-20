@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CommentIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Comment from "@material-ui/icons/Error";
-import { selectItem, openEditForm } from "../redux/actions";
+import { selectItem, deleteItem, openEditForm } from "../redux/actions"; 
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import Card from "@material-ui/core/Card";
@@ -54,6 +54,13 @@ class ListComponent extends React.Component {
     console.log(this.props.checked);
   };
 
+  handleDelete = item => {
+    const result = window.confirm(`Do you really want to delete item?`);
+    if(result){ 
+      this.props.deleteItem(item);
+    }
+  };
+  
   // componentDidUpdate(nextProps) {
   //   // You don't have to do this check first, but it can help prevent an unneeded render
   //   if (nextProps.checked !== this.props.checked) {
@@ -92,7 +99,7 @@ class ListComponent extends React.Component {
   render() {
     
     const { items, checked, classes } = this.props;
-    console.log(checked);
+    
     return (
       <div className={classes.root}>
         <Grid container spacing={2} margin={10} alignItems="flex-end">
@@ -139,10 +146,6 @@ class ListComponent extends React.Component {
                         checked={checked.indexOf(item._id) !== -1}
                       />
 
-                      {/* <Avatar alt="Remy Sharp" className={classes.avatar}>
-                  {value.id}
-                </Avatar> */}
-
                       <ListItemText primary={item.key} secondary={item.value} />
 
                       <ListItemSecondaryAction>
@@ -154,7 +157,7 @@ class ListComponent extends React.Component {
                         </IconButton>
                         <IconButton
                           aria-label="Delete"
-                          onClick={(item) => this.openEditDialog(item)}
+                          onClick={ () => this.handleDelete(item) }
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -181,7 +184,8 @@ const mapStateToProps = state => (
 });
 
 const mapDispatchToProps = dispatch => ({
-  selectItem: (item) => dispatch(selectItem(item)), 
+  selectItem: (item) => dispatch(selectItem(item)),
+  deleteItem: (item) => dispatch(deleteItem(item)),
   openEditForm: (item) => dispatch(openEditForm(item))
 });
 

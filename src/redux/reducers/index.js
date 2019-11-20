@@ -84,7 +84,7 @@ export default function rootReducer(state = InitialState, action) {
             } else {
                 currentChecked.splice(currentIndex, 1);
             }
-            
+
             return {
                 ...state,
                 uiState: {
@@ -94,21 +94,38 @@ export default function rootReducer(state = InitialState, action) {
             }
 
         case types.DELETE_ITEM:
+            console.log("Delete item" + JSON.stringify(action));
+            console.log("state: ", state);
             // for (var article in state.articles) {
-            for (var check in state.uiState.checked) {
-                //remove article
-                //var article = state.articles[check];
-                state.item.splice(check, 1);
+                console.log(typeof action.payload);
+            let deleteArray = [...state.items];
+            if (typeof action.payload == 'object') { 
+                state.items.forEach((item, indx) => {
+                    if(item.key === action.payload.key){
+                        const deleteIdx = indx;
+                        console.log(deleteIdx);
+                        deleteArray.splice(deleteIdx, 1);
+                    }
+                });
 
-                //Remove Index
-                var index = state.uiState.checked.indexOf(check);
-                if (index > -1) {
-                    state.uiState.checked.splice(index, 1);
+            } else {
+                for (let check in state.uiState.checked) {
+                    //remove article
+                    //var article = state.articles[check];
+                    state.item.splice(check, 1);
+
+                    //Remove Index
+                    var index = state.uiState.checked.indexOf(check);
+                    if (index > -1) {
+                        state.uiState.checked.splice(index, 1);
+                    }
                 }
+                state.uiState.checked = [];
             }
-            state.uiState.checked = [];
-            return state;
-
+            return {
+                ...state,
+                items: deleteArray
+            };
         default:
             return state;
 
